@@ -1,0 +1,11 @@
+itens_irp: consulta por id de irp
+participantes_item_irp: consulta por id de irp
+licitacoes: não responde
+itens_licitacao: consulta por id de licitacao
+itens_preco_praticado: consulta por id de item praticado
+itens_registro_preco: consulta por id de registro preco
+fornecedores_itens_registro_preco: consulta por id de registro preco
+renegoniacoes_fornecedores_itens_registro_preco: consulta por id de registro preco
+uasgs: não responde
+
+
