@@ -53,9 +53,12 @@ for i in range(len(json_data_dict)):
     print('Processing row number', i)
     values = dict()
     for s in column_names:
-        values[s] = json_data_dict[i][s];
-        if (str(values[s]).lower() == 'true'): values[s] = '1'
-        elif (str(values[s]).lower() == 'false'): values[s] = '0'
+        if (s in json_data_dict[i]):
+            values[s] = json_data_dict[i][s];
+            if (str(values[s]).lower() == 'true'): values[s] = '1'
+            elif (str(values[s]).lower() == 'false'): values[s] = '0'
+        else:
+            values[s] = 'NULL'
     insert_sql_script += 'INSERT INTO ' + args['table'] + '(' + ','.join(column_names) + ') VALUES (' + ','.join("'{0}'".format(w) for w in (map(str, values.values()))) + ')' + ';\n'
     print('Done!')
 
