@@ -5,19 +5,19 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema licitatoriumdb
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema licitatoriumdb
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
-USE `mydb` ;
+CREATE SCHEMA IF NOT EXISTS `licitatoriumdb` DEFAULT CHARACTER SET utf8 ;
+USE `licitatoriumdb` ;
 
 -- -----------------------------------------------------
--- Table `mydb`.`ModalidadeLicitacao`
+-- Table `licitatoriumdb`.`ModalidadeLicitacao`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`ModalidadeLicitacao` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`ModalidadeLicitacao` (
   `codigo` INT NOT NULL,
   `descricao` VARCHAR(45) NULL,
   PRIMARY KEY (`codigo`),
@@ -26,9 +26,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Orgao`
+-- Table `licitatoriumdb`.`Orgao`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Orgao` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`Orgao` (
   `codigo` INT NOT NULL,
   `nome` VARCHAR(100) NULL,
   `ativo` TINYINT(1) NULL,
@@ -41,9 +41,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`UASG`
+-- Table `licitatoriumdb`.`UASG`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`UASG` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`UASG` (
   `ativo` TINYINT(1) NULL,
   `cep` VARCHAR(45) NULL,
   `ddd` VARCHAR(45) NULL,
@@ -66,16 +66,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`UASG` (
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_UASG_1`
     FOREIGN KEY (`id_orgao`)
-    REFERENCES `mydb`.`Orgao` (`codigo`)
+    REFERENCES `licitatoriumdb`.`Orgao` (`codigo`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Licitacao`
+-- Table `licitatoriumdb`.`Licitacao`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Licitacao` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`Licitacao` (
   `identificador` VARCHAR(100) NOT NULL,
   `data_abertura_proposta` DATETIME NULL,
   `data_entrega_edital` DATETIME NULL,
@@ -99,21 +99,21 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Licitacao` (
   INDEX `fk_Licitacao_2_idx` (`uasg` ASC),
   CONSTRAINT `fk_Licitacao_1`
     FOREIGN KEY (`modalidade`)
-    REFERENCES `mydb`.`ModalidadeLicitacao` (`codigo`)
+    REFERENCES `licitatoriumdb`.`ModalidadeLicitacao` (`codigo`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Licitacao_2`
     FOREIGN KEY (`uasg`)
-    REFERENCES `mydb`.`UASG` (`id`)
+    REFERENCES `licitatoriumdb`.`UASG` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`RegistroPreco`
+-- Table `licitatoriumdb`.`RegistroPreco`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`RegistroPreco` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`RegistroPreco` (
   `id_licitacao` VARCHAR(100) NOT NULL,
   `data_inicio_validade` DATETIME NULL,
   `data_fim_validade` DATETIME NULL,
@@ -125,16 +125,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`RegistroPreco` (
   UNIQUE INDEX `id_licitacao_UNIQUE` (`id_licitacao` ASC),
   CONSTRAINT `fk_RegistroPreco_1`
     FOREIGN KEY (`id_licitacao`)
-    REFERENCES `mydb`.`Licitacao` (`identificador`)
+    REFERENCES `licitatoriumdb`.`Licitacao` (`identificador`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`ItemRegistroPreco`
+-- Table `licitatoriumdb`.`ItemRegistroPreco`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`ItemRegistroPreco` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`ItemRegistroPreco` (
   `numero_registro_preco` VARCHAR(100) NOT NULL,
   `numero_item_licitacao` INT NOT NULL,
   `marca` VARCHAR(45) NULL,
@@ -146,31 +146,31 @@ CREATE TABLE IF NOT EXISTS `mydb`.`ItemRegistroPreco` (
   PRIMARY KEY (`numero_registro_preco`, `numero_item_licitacao`),
   CONSTRAINT `fk_ItemRegistroPreco_1`
     FOREIGN KEY (`numero_registro_preco`)
-    REFERENCES `mydb`.`RegistroPreco` (`id_licitacao`)
+    REFERENCES `licitatoriumdb`.`RegistroPreco` (`id_licitacao`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`PrecoPraticado`
+-- Table `licitatoriumdb`.`PrecoPraticado`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`PrecoPraticado` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`PrecoPraticado` (
   `id_licitacao` VARCHAR(45) NOT NULL,
   `valor_total` VARCHAR(45) NULL,
   PRIMARY KEY (`id_licitacao`),
   CONSTRAINT `fk_PrecoPraticado_1`
     FOREIGN KEY (`id_licitacao`)
-    REFERENCES `mydb`.`Licitacao` (`identificador`)
+    REFERENCES `licitatoriumdb`.`Licitacao` (`identificador`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`ItemPrecoPraticado`
+-- Table `licitatoriumdb`.`ItemPrecoPraticado`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`ItemPrecoPraticado` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`ItemPrecoPraticado` (
   `unidade` VARCHAR(20) NOT NULL,
   `valor_total` DECIMAL NULL,
   `valor_unitario` DECIMAL NULL,
@@ -185,55 +185,55 @@ CREATE TABLE IF NOT EXISTS `mydb`.`ItemPrecoPraticado` (
   INDEX `fk_ItemPrecoPraticado_1_idx` (`id_licitacao` ASC),
   CONSTRAINT `fk_ItemPrecoPraticado_1`
     FOREIGN KEY (`id_licitacao`)
-    REFERENCES `mydb`.`PrecoPraticado` (`id_licitacao`)
+    REFERENCES `licitatoriumdb`.`PrecoPraticado` (`id_licitacao`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`FornecedorRegistroPreco`
+-- Table `licitatoriumdb`.`FornecedorRegistroPreco`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`FornecedorRegistroPreco` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`FornecedorRegistroPreco` (
   `cnpj_fornecedor` INT NOT NULL,
   `nome_fornecedor` VARCHAR(45) NULL,
   `classificacao_fornecedor` VARCHAR(45) NULL,
   `id_registro_preco` VARCHAR(100) NOT NULL,
   `numero_item_licitacao` INT NOT NULL,
-  PRIMARY KEY (`cnpj_fornecedor`, `numero_item_licitacao`, `id_registro_preco`),
-  INDEX `fk_FornecedorRegistroPreco_1_idx` (`numero_item_licitacao` ASC, `id_registro_preco` ASC),
+  PRIMARY KEY (`cnpj_fornecedor`, `id_registro_preco`, `numero_item_licitacao`),
+  INDEX `fk_FornecedorRegistroPreco_1_idx` (`id_registro_preco` ASC, `numero_item_licitacao` ASC),
   CONSTRAINT `fk_FornecedorRegistroPreco_1`
-    FOREIGN KEY (`numero_item_licitacao` , `id_registro_preco`)
-    REFERENCES `mydb`.`ItemRegistroPreco` (`numero_item_licitacao` , `numero_registro_preco`)
+    FOREIGN KEY (`id_registro_preco` , `numero_item_licitacao`)
+    REFERENCES `licitatoriumdb`.`ItemRegistroPreco` (`numero_registro_preco` , `numero_item_licitacao`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`RenegociacaoFornecedorItemRegistroPreco`
+-- Table `licitatoriumdb`.`RenegFornItemRegistroPreco`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`RenegociacaoFornecedorItemRegistroPreco` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`RenegFornItemRegistroPreco` (
   `cnpj_fornecedor` INT NOT NULL,
-  `id_registro_preco` VARCHAR(45) NOT NULL,
-  `numero_item_licitacao` INT NOT NULL,
+  `id_registro_preco` VARCHAR(100) NOT NULL,
   `valor_renegociado` DECIMAL NULL,
   `data_renegociacao` DATETIME NULL,
   `numero_renegociacao` INT NOT NULL,
-  PRIMARY KEY (`cnpj_fornecedor`, `id_registro_preco`, `numero_item_licitacao`, `numero_renegociacao`),
-  INDEX `fk_RenegociacaoFornecedorItemRegistroPreco_1_idx` (`cnpj_fornecedor` ASC, `id_registro_preco` ASC, `numero_item_licitacao` ASC),
-  CONSTRAINT `fk_RenegociacaoFornecedorItemRegistroPreco_1`
+  `numero_item_licitacao` INT NOT NULL,
+  PRIMARY KEY (`numero_renegociacao`),
+  INDEX `fk_RenegFornItemRegistroPreco_1_idx` (`cnpj_fornecedor` ASC, `id_registro_preco` ASC, `numero_item_licitacao` ASC),
+  CONSTRAINT `fk_RenegFornItemRegistroPreco_1`
     FOREIGN KEY (`cnpj_fornecedor` , `id_registro_preco` , `numero_item_licitacao`)
-    REFERENCES `mydb`.`FornecedorRegistroPreco` (`cnpj_fornecedor` , `id_registro_preco` , `numero_item_licitacao`)
+    REFERENCES `licitatoriumdb`.`FornecedorRegistroPreco` (`cnpj_fornecedor` , `id_registro_preco` , `numero_item_licitacao`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`ClasseMaterial`
+-- Table `licitatoriumdb`.`ClasseMaterial`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`ClasseMaterial` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`ClasseMaterial` (
   `codigo` INT NOT NULL,
   `descricao` VARCHAR(45) NULL,
   `codigo_grupo` VARCHAR(45) NULL,
@@ -242,9 +242,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`GrupoMaterial`
+-- Table `licitatoriumdb`.`GrupoMaterial`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`GrupoMaterial` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`GrupoMaterial` (
   `codigo` INT NOT NULL,
   `descricao` VARCHAR(100) NULL,
   PRIMARY KEY (`codigo`))
@@ -252,9 +252,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Material`
+-- Table `licitatoriumdb`.`Material`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Material` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`Material` (
   `codigo` INT NOT NULL,
   `descricao` VARCHAR(150) NULL,
   `id_grupo` INT NULL,
@@ -267,21 +267,21 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Material` (
   INDEX `fk_Material_2_idx` (`id_grupo` ASC),
   CONSTRAINT `fk_Material_1`
     FOREIGN KEY (`id_classe`)
-    REFERENCES `mydb`.`ClasseMaterial` (`codigo`)
+    REFERENCES `licitatoriumdb`.`ClasseMaterial` (`codigo`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Material_2`
     FOREIGN KEY (`id_grupo`)
-    REFERENCES `mydb`.`GrupoMaterial` (`codigo`)
+    REFERENCES `licitatoriumdb`.`GrupoMaterial` (`codigo`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`SecaoServico`
+-- Table `licitatoriumdb`.`SecaoServico`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`SecaoServico` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`SecaoServico` (
   `codigo` INT NOT NULL,
   `descricao` VARCHAR(45) NULL,
   PRIMARY KEY (`codigo`))
@@ -289,9 +289,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`DivisaoServico`
+-- Table `licitatoriumdb`.`DivisaoServico`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`DivisaoServico` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`DivisaoServico` (
   `codigo` INT NOT NULL,
   `descricao` VARCHAR(45) NULL,
   `codigo_secao` VARCHAR(45) NULL,
@@ -300,25 +300,26 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`GrupoServico`
+-- Table `licitatoriumdb`.`GrupoServico`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`GrupoServico` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`GrupoServico` (
   `codigo` INT NOT NULL,
   `descricao` VARCHAR(45) NULL,
   `codigo_divisao` INT NULL,
   PRIMARY KEY (`codigo`),
+  INDEX `fk_GrupoServico_1_idx` (`codigo_divisao` ASC),
   CONSTRAINT `fk_GrupoServico_1`
-    FOREIGN KEY ()
-    REFERENCES `mydb`.`DivisaoServico` ()
+    FOREIGN KEY (`codigo_divisao`)
+    REFERENCES `licitatoriumdb`.`DivisaoServico` (`codigo`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`ClasseServico`
+-- Table `licitatoriumdb`.`ClasseServico`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`ClasseServico` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`ClasseServico` (
   `codigo` INT NOT NULL,
   `descricao` VARCHAR(45) NULL,
   `codigo_grupo` INT NULL,
@@ -326,16 +327,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`ClasseServico` (
   INDEX `fk_ClasseServico_1_idx` (`codigo_grupo` ASC),
   CONSTRAINT `fk_ClasseServico_1`
     FOREIGN KEY (`codigo_grupo`)
-    REFERENCES `mydb`.`GrupoServico` (`codigo`)
+    REFERENCES `licitatoriumdb`.`GrupoServico` (`codigo`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Servico`
+-- Table `licitatoriumdb`.`Servico`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Servico` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`Servico` (
   `codigo` INT NOT NULL,
   `descricao` VARCHAR(45) NULL,
   `unidade_medida` VARCHAR(45) NULL,
@@ -351,31 +352,31 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Servico` (
   INDEX `fk_Servico_4_idx` (`codigo_classe` ASC),
   CONSTRAINT `fk_Servico_1`
     FOREIGN KEY (`codigo_secao`)
-    REFERENCES `mydb`.`SecaoServico` (`codigo`)
+    REFERENCES `licitatoriumdb`.`SecaoServico` (`codigo`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Servico_2`
     FOREIGN KEY (`codigo_divisao`)
-    REFERENCES `mydb`.`DivisaoServico` (`codigo`)
+    REFERENCES `licitatoriumdb`.`DivisaoServico` (`codigo`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Servico_3`
     FOREIGN KEY (`codigo_grupo`)
-    REFERENCES `mydb`.`GrupoServico` (`codigo`)
+    REFERENCES `licitatoriumdb`.`GrupoServico` (`codigo`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Servico_4`
     FOREIGN KEY (`codigo_classe`)
-    REFERENCES `mydb`.`ClasseServico` (`codigo`)
+    REFERENCES `licitatoriumdb`.`ClasseServico` (`codigo`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`ItemLicitacao`
+-- Table `licitatoriumdb`.`ItemLicitacao`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`ItemLicitacao` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`ItemLicitacao` (
   `cnpj_fornecedor` INT NOT NULL,
   `codigo_item_material` INT NULL,
   `codigo_item_servico` INT NULL,
@@ -395,26 +396,26 @@ CREATE TABLE IF NOT EXISTS `mydb`.`ItemLicitacao` (
   INDEX `fk_ItemLicitacao_3_idx` (`codigo_item_servico` ASC),
   CONSTRAINT `fk_ItemLicitacao_1`
     FOREIGN KEY (`numero_licitacao`)
-    REFERENCES `mydb`.`Licitacao` (`identificador`)
+    REFERENCES `licitatoriumdb`.`Licitacao` (`identificador`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_ItemLicitacao_2`
     FOREIGN KEY (`codigo_item_material`)
-    REFERENCES `mydb`.`Material` (`codigo`)
+    REFERENCES `licitatoriumdb`.`Material` (`codigo`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_ItemLicitacao_3`
     FOREIGN KEY (`codigo_item_servico`)
-    REFERENCES `mydb`.`Servico` (`codigo`)
+    REFERENCES `licitatoriumdb`.`Servico` (`codigo`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`TipoContrato`
+-- Table `licitatoriumdb`.`TipoContrato`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`TipoContrato` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`TipoContrato` (
   `codigo` INT NOT NULL,
   `descricao` VARCHAR(45) NULL,
   PRIMARY KEY (`codigo`))
@@ -422,9 +423,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Contrato`
+-- Table `licitatoriumdb`.`Contrato`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Contrato` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`Contrato` (
   `cnpj_contratada` INT NULL,
   `codigo_contrato` INT NULL,
   `cpfContratada` VARCHAR(45) NULL,
@@ -445,21 +446,21 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Contrato` (
   INDEX `fk_Contrato_2_idx` (`codigo_contrato` ASC),
   CONSTRAINT `fk_Contrato_1`
     FOREIGN KEY (`licitacao_associada`)
-    REFERENCES `mydb`.`Licitacao` (`identificador`)
+    REFERENCES `licitatoriumdb`.`Licitacao` (`identificador`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Contrato_2`
     FOREIGN KEY (`codigo_contrato`)
-    REFERENCES `mydb`.`TipoContrato` (`codigo`)
+    REFERENCES `licitatoriumdb`.`TipoContrato` (`codigo`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`EventoContrato`
+-- Table `licitatoriumdb`.`EventoContrato`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`EventoContrato` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`EventoContrato` (
   `codigo_evento` INT NOT NULL,
   `dataPublicacao` VARCHAR(45) NULL,
   `dataRescisao` VARCHAR(45) NULL,
@@ -481,16 +482,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`EventoContrato` (
   INDEX `fk_EventoContrato_1_idx` (`id_contrato` ASC),
   CONSTRAINT `fk_EventoContrato_1`
     FOREIGN KEY (`id_contrato`)
-    REFERENCES `mydb`.`Contrato` (`identificador`)
+    REFERENCES `licitatoriumdb`.`Contrato` (`identificador`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Municipio`
+-- Table `licitatoriumdb`.`Municipio`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Municipio` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`Municipio` (
   `ativo` TINYINT(1) NULL,
   `id` INT NOT NULL,
   `nome` VARCHAR(45) NULL,
@@ -501,9 +502,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`NaturezaJuridica`
+-- Table `licitatoriumdb`.`NaturezaJuridica`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`NaturezaJuridica` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`NaturezaJuridica` (
   `id` INT NOT NULL,
   `descricao` VARCHAR(45) NULL,
   `ativo` TINYINT(1) NULL,
@@ -512,9 +513,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`PorteEmpresa`
+-- Table `licitatoriumdb`.`PorteEmpresa`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`PorteEmpresa` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`PorteEmpresa` (
   `id` INT NOT NULL,
   `descricao` VARCHAR(45) NULL,
   PRIMARY KEY (`id`))
@@ -522,9 +523,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`RamoNegocio`
+-- Table `licitatoriumdb`.`RamoNegocio`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`RamoNegocio` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`RamoNegocio` (
   `id` INT NOT NULL,
   `descricao` VARCHAR(100) NULL,
   `ativo` TINYINT(1) NULL,
@@ -533,9 +534,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Fornecedor`
+-- Table `licitatoriumdb`.`Fornecedor`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Fornecedor` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`Fornecedor` (
   `cnpj` VARCHAR(45) NOT NULL,
   `ativo` TINYINT(1) NULL,
   `cpf` VARCHAR(45) NULL,
@@ -556,45 +557,39 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Fornecedor` (
   INDEX `fk_Fornecedor_2_idx` (`id_natureza_juridica` ASC),
   INDEX `fk_Fornecedor_3_idx` (`id_porte_empresa` ASC),
   INDEX `fk_Fornecedor_4_idx` (`id_ramo_negocio` ASC),
+  INDEX `fk_Fornecedor_5_idx` (`id_unidade_cadastradora` ASC),
   CONSTRAINT `fk_Fornecedor_1`
     FOREIGN KEY (`id_municipio`)
-    REFERENCES `mydb`.`Municipio` (`id`)
+    REFERENCES `licitatoriumdb`.`Municipio` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Fornecedor_2`
     FOREIGN KEY (`id_natureza_juridica`)
-    REFERENCES `mydb`.`NaturezaJuridica` (`id`)
+    REFERENCES `licitatoriumdb`.`NaturezaJuridica` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Fornecedor_3`
     FOREIGN KEY (`id_porte_empresa`)
-    REFERENCES `mydb`.`PorteEmpresa` (`id`)
+    REFERENCES `licitatoriumdb`.`PorteEmpresa` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Fornecedor_4`
     FOREIGN KEY (`id_ramo_negocio`)
-    REFERENCES `mydb`.`RamoNegocio` (`id`)
+    REFERENCES `licitatoriumdb`.`RamoNegocio` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Fornecedor_5`
+    FOREIGN KEY (`id_unidade_cadastradora`)
+    REFERENCES `licitatoriumdb`.`UASG` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`LinhasFornecimento`
+-- Table `licitatoriumdb`.`TiposOcorrencia`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`LinhasFornecimento` (
-  `ativo` TINYINT(1) NULL,
-  `codigo_material` VARCHAR(45) NULL,
-  `codigo_servico` VARCHAR(45) NULL,
-  `id` INT NULL,
-  `tipo` VARCHAR(45) NULL)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`TiposOcorrencia`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`TiposOcorrencia` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`TiposOcorrencia` (
   `id` INT NOT NULL,
   `descricao` VARCHAR(45) NULL,
   PRIMARY KEY (`id`))
@@ -602,9 +597,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`OcorrenciaFornecedor`
+-- Table `licitatoriumdb`.`OcorrenciaFornecedor`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`OcorrenciaFornecedor` (
+CREATE TABLE IF NOT EXISTS `licitatoriumdb`.`OcorrenciaFornecedor` (
   `id` INT NOT NULL,
   `cnpj` VARCHAR(45) NULL,
   `tipo_pessoa` VARCHAR(45) NULL,
@@ -616,34 +611,14 @@ CREATE TABLE IF NOT EXISTS `mydb`.`OcorrenciaFornecedor` (
   INDEX `fk_OcorrenciaFornecedor_2_idx` (`id_tipo_ocorrencia` ASC),
   CONSTRAINT `fk_OcorrenciaFornecedor_1`
     FOREIGN KEY (`cnpj`)
-    REFERENCES `mydb`.`Fornecedor` (`cnpj`)
+    REFERENCES `licitatoriumdb`.`Fornecedor` (`cnpj`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_OcorrenciaFornecedor_2`
     FOREIGN KEY (`id_tipo_ocorrencia`)
-    REFERENCES `mydb`.`TiposOcorrencia` (`id`)
+    REFERENCES `licitatoriumdb`.`TiposOcorrencia` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`AmbitoOcorrencia`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`AmbitoOcorrencia` (
-  `id` INT NOT NULL,
-  `descricao` VARCHAR(45) NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`PrazoOcorrencia`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`PrazoOcorrencia` (
-  `id` INT NOT NULL,
-  `descricao` VARCHAR(45) NULL,
-  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
