@@ -39,7 +39,8 @@ print('[INFO] Loading JSON file from ' + json_url + '...')
 json_data = json.load(open(json_url))
 
 # Data of interest
-json_data_dict = json_data['_embedded']['municipios'];
+for key, value in json_data['_embedded'].items():
+    json_data_dict = value #json_data['_embedded'].itervalues().next();
 
 print('[INFO] Done!')
 
