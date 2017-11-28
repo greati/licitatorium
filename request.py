@@ -31,4 +31,4 @@ l = []
 with open('identificadores') as f:
 	for line in f:
 		l.append(int(line))
-request_url('aditivos.json', base_url, url_f, [l[0:2]])
+request_url('aditivos.json', base_url, url_f, [l])
