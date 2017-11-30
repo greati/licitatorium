@@ -42,7 +42,6 @@ print('[INFO] Loading JSON file from ' + json_url + '...')
 count = 0
 offset = 0
 
-urls = []    
 if (args['web']=='y'):
     if ('offset' in args and 'count' in args):
         offset = int(args['offset'])
@@ -51,18 +50,17 @@ if (args['web']=='y'):
         raise Exception('If it is a web url, define a count and an offset!')
     if (offset == 0):
         raise Exception('You must define a positive offset.')
+    urls = []    
     i = 0
     while(i <= count):
         urls.append(json_url + '?offset=' + str(i))
         i += offset
-else:
-    urls.append(json_url)
 
 # SQL to save 
+insert_sql_script = ''
 insert_sql_script_file = open(args['save'], 'a')
 
 for j,u in enumerate(urls):
-    insert_sql_script = ''
     if (args['web']=='y'):
         url = urllib.request.urlopen(u)
         json_data = json.loads(url.read().decode('utf-8'))
@@ -79,10 +77,14 @@ for j,u in enumerate(urls):
 
     for i in range(len(json_data_dict)):
         print('Processing row number', j*offset + i)
+        identifier = json_data_dict[i]['identificador']
+        url_identifier = 'http://compras.dados.gov.br/licitacoes/doc/licitacao/'+identifier +'.json'
+        url_identifier_loader = urllib.request.urlopen(url_identifier)
+        json_data_lic = json.loads(url_identifier_loader.read().decode('utf-8'))
         values = dict()
         for s in column_names:
-            if (s in json_data_dict[i]):
-                values[s] = json_data_dict[i][s];
+            if (s in json_data_lic):
+                values[s] = json_data_lic[s];
                 if (type(values[s]) is str):
                     values[s] = values[s].strip()
                     values[s] = values[s].replace("'","")
